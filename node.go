@@ -1,5 +1,11 @@
 package list
 
+import "errors"
+
+var (
+	ErrIndexOutOfBounds = errors.New("index out of bounds")
+)
+
 type node struct {
 	data string
 	next *node
@@ -49,26 +55,20 @@ func (l *List) Find(data string) (index int, found bool) {
 }
 
 func (l *List) InsertAtHead(data string) {
-	l.length++
-
 	newNode := &node{
 		data: data,
+		next: l.first,
 	}
 
-	if l.first == nil && l.last == nil {
-		l.first = newNode
+	if l.last == nil {
 		l.last = newNode
-		return
 	}
 
-	newNode.next = l.first
+	l.length++
 	l.first = newNode
-	return
 }
 
 func (l *List) InsertAtTail(data string) {
-	l.length++
-
 	newNode := &node{
 		data: data,
 	}
@@ -79,7 +79,35 @@ func (l *List) InsertAtTail(data string) {
 		return
 	}
 
+	l.length++
 	l.last.next = newNode
 	l.last = newNode
-	return
+}
+
+func (l *List) InsertAtIndex(index int, data string) error {
+	if index == 0 {
+		l.InsertAtHead(data)
+		return nil
+	}
+
+	cursor := 0
+	currentNode := l.first
+
+	for currentNode != nil && cursor < (index-1) {
+		currentNode = currentNode.next
+		cursor++
+	}
+
+	if cursor < (index-1) || currentNode == nil {
+		return ErrIndexOutOfBounds
+	}
+
+	newNode := &node{
+		data: data,
+		next: currentNode.next,
+	}
+
+	currentNode.next = newNode
+
+	return nil
 }
