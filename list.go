@@ -1,4 +1,4 @@
-package list
+package nbds
 
 import "errors"
 
@@ -12,7 +12,7 @@ type List[D comparable] struct {
 	length int
 }
 
-func New[D comparable]() *List[D] {
+func NewList[D comparable]() *List[D] {
 	return &List[D]{}
 }
 

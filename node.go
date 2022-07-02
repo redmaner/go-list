@@ -1,4 +1,4 @@
-package list
+package nbds
 
 type node[D comparable] struct {
 	data D
@@ -10,7 +10,7 @@ func NewNode[D comparable]() *node[D] {
 }
 
 func (n *node[D]) setData(data D) *node[D] {
-	n.data = data 
+	n.data = data
 	return n
 }
 

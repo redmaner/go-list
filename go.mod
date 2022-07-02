@@ -1,4 +1,4 @@
-module github.com/redmaner/go-list
+module github.com/redmaner/nbds
 
 go 1.18
 
