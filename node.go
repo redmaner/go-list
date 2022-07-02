@@ -1,20 +1,20 @@
 package list
 
-type node struct {
-	data interface{}
-	next *node
+type node[D comparable] struct {
+	data D
+	next *node[D]
 }
 
-func NewNode() *node {
-	return &node{}
+func NewNode[D comparable]() *node[D] {
+	return &node[D]{}
 }
 
-func (n *node) setData(data interface{}) *node {
-	n.data = data
+func (n *node[D]) setData(data D) *node[D] {
+	n.data = data 
 	return n
 }
 
-func (n *node) setNext(next *node) *node {
+func (n *node[D]) setNext(next *node[D]) *node[D] {
 	n.next = next
 	return n
 }

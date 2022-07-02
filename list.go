@@ -6,17 +6,17 @@ var (
 	ErrIndexOutOfBounds = errors.New("index out of bounds")
 )
 
-type List struct {
-	first  *node
-	last   *node
+type List[D comparable] struct {
+	first  *node[D]
+	last   *node[D]
 	length int
 }
 
-func New() *List {
-	return &List{}
+func New[D comparable]() *List[D] {
+	return &List[D]{}
 }
 
-func (l *List) ReadAtIndex(index int) (interface{}, bool) {
+func (l *List[D]) ReadAtIndex(index int) (D, bool) {
 	cursor := 0
 	currentNode := l.first
 
@@ -26,13 +26,14 @@ func (l *List) ReadAtIndex(index int) (interface{}, bool) {
 	}
 
 	if currentNode == nil {
-		return "", false
+		var noData D
+		return noData, false
 	}
 
 	return currentNode.data, true
 }
 
-func (l *List) Find(data interface{}) (index int, found bool) {
+func (l *List[D]) Find(data D) (index int, found bool) {
 	cursor := 0
 	currentNode := l.first
 
@@ -45,8 +46,8 @@ func (l *List) Find(data interface{}) (index int, found bool) {
 	return 0, false
 }
 
-func (l *List) Prepend(data interface{}) {
-	newNode := NewNode().setData(data).setNext(l.first)
+func (l *List[D]) Prepend(data D) {
+	newNode := NewNode[D]().setData(data).setNext(l.first)
 
 	if l.last == nil {
 		l.last = newNode
@@ -56,8 +57,8 @@ func (l *List) Prepend(data interface{}) {
 	l.first = newNode
 }
 
-func (l *List) Append(data interface{}) {
-	newNode := NewNode().setData(data)
+func (l *List[D]) Append(data D) {
+	newNode := NewNode[D]().setData(data)
 
 	if l.first == nil && l.last == nil {
 		l.first = newNode
@@ -70,7 +71,7 @@ func (l *List) Append(data interface{}) {
 	l.last = newNode
 }
 
-func (l *List) InsertAtIndex(index int, data interface{}) error {
+func (l *List[D]) InsertAtIndex(index int, data D) error {
 	if index == 0 {
 		l.Prepend(data)
 		return nil
@@ -88,7 +89,7 @@ func (l *List) InsertAtIndex(index int, data interface{}) error {
 		return ErrIndexOutOfBounds
 	}
 
-	currentNode.next = NewNode().setData(data).setNext(currentNode.next)
+	currentNode.next = NewNode[D]().setData(data).setNext(currentNode.next)
 
 	return nil
 }

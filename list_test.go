@@ -9,7 +9,7 @@ import (
 func TestListReadAndInsertion(t *testing.T) {
 
 	// Basic creation and insertion at tail
-	list := New()
+	list := New[string]()
 	list.Append("1") // index 0
 	list.Append("2") // index 1
 	list.Append("4") // index 2
