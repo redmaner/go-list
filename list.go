@@ -54,7 +54,7 @@ func (l *List[D]) ReadAt(index int) (D, error) {
 
 	for cursor < index && currentNode != nil {
 		cursor++
-		currentNode = currentNode.next
+		currentNode = currentNode.right
 	}
 
 	if currentNode == nil {
@@ -79,7 +79,7 @@ func (l *List[D]) Find(data D) (int, error) {
 		}
 
 		cursor++
-		currentNode = currentNode.next
+		currentNode = currentNode.right
 	}
 
 	return 0, ErrNotFound
@@ -97,10 +97,10 @@ func (l *List[D]) HasMember(data D) bool {
 //
 // Performance: O(1) (constant)
 func (l *List[D]) AddHead(data D) *List[D] {
-	newNode := newNode[D]().setData(data).setNext(l.first)
+	newNode := newNode[D]().setData(data).setRight(l.first)
 
 	if l.first != nil {
-		l.first.setPrev(newNode)
+		l.first.setLeft(newNode)
 	}
 
 	if l.last == nil {
@@ -125,8 +125,8 @@ func (l *List[D]) PopHead() (D, error) {
 	data := l.first.data
 
 	l.length--
-	l.first = l.first.next
-	l.first.setPrev(nil)
+	l.first = l.first.right
+	l.first.setLeft(nil)
 
 	return data, nil
 }
@@ -135,7 +135,7 @@ func (l *List[D]) PopHead() (D, error) {
 //
 // Performance: O(1) (constant)
 func (l *List[D]) AddTail(data D) *List[D] {
-	newNode := newNode[D]().setData(data).setPrev(l.last)
+	newNode := newNode[D]().setData(data).setLeft(l.last)
 
 	if l.first == nil && l.last == nil {
 		l.first = newNode
@@ -145,7 +145,7 @@ func (l *List[D]) AddTail(data D) *List[D] {
 	}
 
 	l.length++
-	l.last.next = newNode
+	l.last.right = newNode
 	l.last = newNode
 
 	return l
@@ -163,7 +163,7 @@ func (l *List[D]) PopTail() (D, error) {
 	data := l.last.data
 
 	l.length--
-	l.last = l.last.prev
+	l.last = l.last.left
 
 	return data, nil
 }
@@ -182,7 +182,7 @@ func (l *List[D]) InsertAt(index int, data D) error {
 	currentNode := l.first
 
 	for currentNode != nil && cursor < (index-1) {
-		currentNode = currentNode.next
+		currentNode = currentNode.right
 		cursor++
 	}
 
@@ -190,7 +190,7 @@ func (l *List[D]) InsertAt(index int, data D) error {
 		return ErrIndexOutOfBounds
 	}
 
-	currentNode.next = newNode[D]().setData(data).setNext(currentNode.next)
+	currentNode.right = newNode[D]().setData(data).setRight(currentNode.right)
 	l.length++
 
 	return nil
@@ -209,7 +209,7 @@ func (l *List[D]) DeleteAt(index int) (D, error) {
 	currentNode := l.first
 
 	for currentNode != nil && cursor < index {
-		currentNode = currentNode.next
+		currentNode = currentNode.right
 		cursor++
 	}
 
@@ -231,7 +231,7 @@ func (l *List[D]) Map(mapFunc func(data D) D) *List[D] {
 
 	for currentNode != nil {
 		currentNode.updateData(mapFunc)
-		currentNode = currentNode.next
+		currentNode = currentNode.right
 	}
 
 	return l
@@ -242,7 +242,7 @@ func (l *List[D]) Each(eachFunc func(data D)) {
 	currentNode := l.first
 	for currentNode != nil {
 		eachFunc(currentNode.data)
-		currentNode = currentNode.next
+		currentNode = currentNode.right
 	}
 }
 
@@ -250,12 +250,12 @@ func (l *List[D]) Each(eachFunc func(data D)) {
 func (l *List[D]) Filter(filterFunc func(data D) bool) *List[D] {
 	currentNode := l.first
 	for currentNode != nil {
-		nextNode := currentNode.next
+		RightNode := currentNode.right
 		if !filterFunc(currentNode.data) {
 			currentNode.unlink()
 			l.length--
 		}
-		currentNode = nextNode
+		currentNode = RightNode
 	}
 
 	return l
@@ -269,7 +269,7 @@ func (l *List[D]) ToSlice() []D {
 
 	for currentNode != nil {
 		slice = append(slice, currentNode.data)
-		currentNode = currentNode.next
+		currentNode = currentNode.right
 	}
 
 	return slice

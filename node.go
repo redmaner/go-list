@@ -1,9 +1,9 @@
 package nbds
 
 type node[D any] struct {
-	data D
-	next *node[D]
-	prev *node[D]
+	data  D
+	right *node[D]
+	left  *node[D]
 }
 
 func newNode[D any]() *node[D] {
@@ -15,13 +15,13 @@ func (n *node[D]) setData(data D) *node[D] {
 	return n
 }
 
-func (n *node[D]) setNext(next *node[D]) *node[D] {
-	n.next = next
+func (n *node[D]) setRight(right *node[D]) *node[D] {
+	n.right = right
 	return n
 }
 
-func (n *node[D]) setPrev(prev *node[D]) *node[D] {
-	n.prev = prev
+func (n *node[D]) setLeft(left *node[D]) *node[D] {
+	n.left = left
 	return n
 }
 
@@ -31,11 +31,11 @@ func (n *node[D]) updateData(updateFunc func(data D) D) *node[D] {
 }
 
 func (n *node[D]) unlink() {
-	if n.prev != nil {
-		n.prev.next = n.next
+	if n.left != nil {
+		n.left.right = n.right
 	}
 
-	if n.next != nil {
-		n.next.prev = n.prev
+	if n.right != nil {
+		n.right.left = n.left
 	}
 }
